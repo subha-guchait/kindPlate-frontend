@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "../../api/userApi";
 import ProfileForm from "@/components/profile/ProfileForm";
+import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
 import { useAuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -66,7 +67,7 @@ const Profile = () => {
     return true;
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProfileSkeleton />;
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">

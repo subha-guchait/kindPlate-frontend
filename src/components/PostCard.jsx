@@ -101,7 +101,7 @@ export const PostCard = ({ post, onDelete }) => {
         ))}
 
       {/*Post Card content*/}
-      <div className="m-4 max-w-[30rem] w-full rounded-4xl bg-background border border-primary/10 shadow-2xl/10 p-4">
+      <div className="m-4 w-full max-w-[28rem] rounded-4xl bg-background border border-primary/10 shadow-lg p-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 card-header">
           <div className="flex items-center gap-4">
@@ -178,7 +178,7 @@ export const PostCard = ({ post, onDelete }) => {
             <img
               src={post.mediaUrl}
               alt={post.title}
-              className="max-w-full rounded-lg object-cover"
+              className="w-full h-64 sm:h-72 md:h-80 object-cover rounded-lg"
             />
           )}
 

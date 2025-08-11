@@ -19,3 +19,11 @@ export const updateUserProfile = async (updates) => {
     throw new Error(err.response.data.message);
   }
 };
+
+export const uploadProfilePicture = async (formData) => {
+  const res = await axios.post("/api/users/profile-picture", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    withCredentials: true,
+  });
+  return res.data;
+};

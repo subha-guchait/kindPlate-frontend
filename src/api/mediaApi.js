@@ -25,3 +25,27 @@ export const uploadPostMedia = async (selectedFile, options) => {
     throw new Error("Failed to upload media");
   }
 };
+
+export const uploadProfilePicture = async (file, options = {}) => {
+  if (!file) return;
+
+  try {
+    const res = await api.post(
+      "/media/upload/profile-photo", // your backend should handle this route separately
+      { fileName: file.name, contentType: file.type },
+      { signal: options.signal }
+    );
+
+    const { url } = res.data;
+
+    await axios.put(url, file, {
+      headers: { "Content-Type": file.type },
+      signal: options.signal,
+    });
+
+    return url.split("?")[0]; // Return S3 URL without query
+  } catch (error) {
+    console.error("Failed to upload profile picture", error);
+    throw new Error("Profile picture upload failed");
+  }
+};

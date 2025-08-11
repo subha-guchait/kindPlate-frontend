@@ -54,47 +54,52 @@ const Home = () => {
     setPosts((prev) => prev.filter((p) => p._id !== postId));
   };
 
-  return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      {/* Filters */}
-      <div className="flex flex-wrap justify-center items-center gap-4 my-6">
-        {/* State dropdown */}
-        <select
-          className="select select-bordered select-sm"
-          value={selectedState}
-          onChange={handleStateChange}
-        >
-          <option value="">All States</option>
-          {states.map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
-        </select>
+  const showFilter =
+    posts.length > 0 || selectedState !== "" || selectedCity !== "";
 
-        {/* City dropdown */}
-        <select
-          className="select select-bordered select-sm"
-          value={selectedCity}
-          onChange={handleCityChange}
-          disabled={!selectedState}
-        >
-          <option value="">All Cities</option>
-          {cities.map((city) => (
-            <option key={city.id} value={city.name}>
-              {city.name}
-            </option>
-          ))}
-        </select>
-      </div>
+  return (
+    <div className="flex min-h-svh flex-col items-center ">
+      {/* Filters */}
+      {showFilter && (
+        <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 my-6 px-4">
+          {/* State dropdown */}
+          <select
+            className="select select-bordered select-sm w-full sm:w-auto"
+            value={selectedState}
+            onChange={handleStateChange}
+          >
+            <option value="">All States</option>
+            {states.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+
+          {/* City dropdown */}
+          <select
+            className="select select-bordered select-sm w-full sm:w-auto"
+            value={selectedCity}
+            onChange={handleCityChange}
+            disabled={!selectedState}
+          >
+            <option value="">All Cities</option>
+            {cities.map((city) => (
+              <option key={city.id} value={city.name}>
+                {city.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       {loading ? (
-        <div className="flex flex-col items-center">
+        <>
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
                 <PostSkeleton key={index} />
               ))
             : posts.map((post) => <PostCard key={post._id} post={post} />)}
-        </div>
+        </>
       ) : posts.length === 0 || !posts ? (
         <div className="text-center text-gray-500">No posts available</div>
       ) : (
