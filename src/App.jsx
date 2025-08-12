@@ -7,6 +7,7 @@ import Home from "./pages/home/Home";
 import UserPostsPage from "./pages/userPages/UserPosts";
 import Profile from "./pages/profile/Profile";
 import { useAuthContext } from "./context/AuthContext";
+import NetworkNotifier from "./components/NetworkNotifier";
 
 const App = () => {
   const { authUser, loading } = useAuthContext();
@@ -19,6 +20,7 @@ const App = () => {
   }
   return (
     <div data-theme="corporate">
+      <NetworkNotifier />
       <Navbar />
       <div>
         <Toaster />
