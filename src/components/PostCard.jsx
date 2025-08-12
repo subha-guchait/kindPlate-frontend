@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { CircleEllipsis, Trash2 } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
 import { useLike, useClaimPost, useDeletePost } from "@/hooks/usePostAction";
@@ -115,9 +116,14 @@ export const PostCard = ({ post, onDelete }) => {
             <div>
               <h3 className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-semibold">
-                    {post.postedBy.firstName} {post.postedBy.lastName}
-                  </p>
+                  <Link
+                    to={`/users/${post.postedBy._id}`}
+                    className=" hover:underline"
+                  >
+                    <p className="text-lg font-semibold">
+                      {post.postedBy.firstName} {post.postedBy.lastName}
+                    </p>
+                  </Link>
                   <div className={`badge ${color} text-xs`}>{text}</div>
                 </div>
                 <span className="opacity-70 text-sm">

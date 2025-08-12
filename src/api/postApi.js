@@ -22,6 +22,15 @@ export const createPost = async (postData) => {
   }
 };
 
+export const otherUserPosts = async (userId) => {
+  try {
+    const res = await api.get(`/posts/user/${userId}`);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw new Error(err.response.data.message);
+  }
+};
 export const userPosts = async () => {
   try {
     const res = await api.get("/posts/user");

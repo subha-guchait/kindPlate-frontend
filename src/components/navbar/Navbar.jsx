@@ -36,29 +36,23 @@ const Navbar = () => {
 
           {authUser && authUser.role === "user" && (
             <>
-              <li>
+              <li className="tooltip tooltip-bottom" data-tip="Home">
                 <Link to="/">
-                  <div className="tooltip tooltip-bottom" data-tip="Home">
-                    <House />
-                  </div>
+                  <House />
                 </Link>
               </li>
-              <li>
+              <li className="tooltip tooltip-bottom" data-tip="Profile">
                 <Link to="/profile">
-                  <div className="tooltip tooltip-bottom" data-tip="Profile">
-                    <UserRoundPen className="w-6 h-6 object-contain" />
-                  </div>
+                  <UserRoundPen className="w-6 h-6 object-contain" />
                 </Link>
               </li>
-              <li>
+              <li className="tooltip tooltip-bottom" data-tip="My posts">
                 <Link to="/my-posts">
-                  <div className="tooltip tooltip-bottom" data-tip="My posts">
-                    <img
-                      src={allPostsIcon}
-                      alt="posts"
-                      className="w-6 h-6 object-contain"
-                    />
-                  </div>
+                  <img
+                    src={allPostsIcon}
+                    alt="posts"
+                    className="w-6 h-6 object-contain"
+                  />
                 </Link>
               </li>
             </>
@@ -73,10 +67,8 @@ const Navbar = () => {
               </li>
             </>
           ) : (
-            <li>
-              <div className="tooltip tooltip-bottom" data-tip="Logout">
-                <LogoutButton />
-              </div>
+            <li className="tooltip tooltip-bottom" data-tip="Logout">
+              <LogoutButton />
             </li>
           )}
         </ul>

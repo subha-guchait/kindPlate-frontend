@@ -5,6 +5,7 @@ import Signup from "./pages/signup/Signup";
 import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/home/Home";
 import UserPostsPage from "./pages/userPages/UserPosts";
+import OtherUserPostsPage from "./pages/userPages/OtherUserPosts";
 import Profile from "./pages/profile/Profile";
 import { useAuthContext } from "./context/AuthContext";
 import NetworkNotifier from "./components/NetworkNotifier";
@@ -35,6 +36,12 @@ const App = () => {
             path="/my-posts"
             element={authUser ? <UserPostsPage /> : <Navigate to="/login" />}
           ></Route>
+          <Route
+            path="/users/:userId"
+            element={
+              authUser ? <OtherUserPostsPage /> : <Navigate to="/login" />
+            }
+          />
           <Route
             path="/profile"
             element={authUser ? <Profile /> : <Navigate to="/login" />}
