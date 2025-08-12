@@ -3,6 +3,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import LogoutButton from "../logoutButton/LogoutButton";
 import { House, UserRoundPen } from "lucide-react";
 import allPostsIcon from "../../assets/allPostIcon.png";
+import logo from "../../../public/logo.png";
 
 const Navbar = () => {
   const { authUser } = useAuthContext();
@@ -11,7 +12,12 @@ const Navbar = () => {
     <div className="navbar bg-base-100 shadow-md">
       <div className="flex-1">
         <Link to="/" className="text-xl font-bold text-primary">
-          Feed Forward
+          <img
+            src={logo}
+            alt="Kind Plate logo"
+            className="inline-block w-10 h-10 mr-2"
+          />
+          Kind Plate
         </Link>
       </div>
       <div className="flex-none">
