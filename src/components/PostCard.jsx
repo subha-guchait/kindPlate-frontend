@@ -11,8 +11,9 @@ import {
   FaCopy,
   FaCheck,
 } from "react-icons/fa";
+import { X } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CircleEllipsis, Trash2 } from "lucide-react";
 import { useAuthContext } from "@/context/AuthContext";
@@ -25,7 +26,24 @@ export const PostCard = ({ post, onDelete }) => {
   const [bookmarked, setBookmarked] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [copied, setCopied] = useState(false);
+
   const { authUser } = useAuthContext();
+
+  const [previewImg, setPreviewImg] = useState(null);
+  // 🔹 Close modal on Esc key
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        setPreviewImg(null);
+      }
+    };
+
+    if (previewImg) {
+      window.addEventListener("keydown", handleEsc);
+    }
+
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [previewImg]);
 
   const handleDeleteSuccess = () => {
     if (onDelete) onDelete(post._id);
@@ -101,17 +119,36 @@ export const PostCard = ({ post, onDelete }) => {
           </div>
         ))}
 
+      {/* Image Preview Modal */}
+      {previewImg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
+          <button
+            onClick={() => setPreviewImg(null)}
+            className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 rounded-full p-2 cursor-pointer tooltip tooltip-left"
+            data-tip="Press Esc to close"
+          >
+            <X className="h-6 w-6 " />
+          </button>
+          <img
+            src={previewImg}
+            alt="Preview"
+            className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg"
+          />
+        </div>
+      )}
+
       {/*Post Card content*/}
-      <div className="m-4 w-full max-w-[28rem] rounded-4xl bg-background border border-primary/10 shadow-lg p-4">
+      <div className="m-4 w-full min-w-[18rem] max-w-[18rem] sm:min-w-[22rem] sm:max-w-[22rem] md:min-w-[28rem] md:max-w-[28rem] rounded-4xl bg-background border border-primary/10 shadow-lg p-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 card-header">
           <div className="flex items-center gap-4">
             <img
               src={getUserAvatar(post)}
-              alt="User"
+              alt={post.postedBy.firstName}
               width={35}
               height={35}
-              className="rounded-full"
+              className="rounded-full cursor-pointer"
+              onClick={() => setPreviewImg(getUserAvatar(post))}
             />
             <div>
               <h3 className="flex flex-col">
@@ -166,7 +203,7 @@ export const PostCard = ({ post, onDelete }) => {
         </div>
 
         {/* Content */}
-        <div className="mt-4 flex flex-col gap-4">
+        <div className=" mt-4 flex flex-col gap-4">
           <p className="whitespace-pre-wrap">
             <strong>{post.title} </strong>
             <br />
@@ -184,7 +221,8 @@ export const PostCard = ({ post, onDelete }) => {
             <img
               src={post.mediaUrl}
               alt={post.title}
-              className="w-full h-64 sm:h-72 md:h-80 object-cover rounded-lg"
+              className="w-full max-w-[18rem] sm:max-w-[22rem] md:max-w-[28rem] aspect-[4/3] h-48 sm:h-60 md:h-72 object-cover rounded-lg"
+              onClick={() => setPreviewImg(post.mediaUrl)}
             />
           )}
 
@@ -197,7 +235,7 @@ export const PostCard = ({ post, onDelete }) => {
             onClick={handleLikeToggle}
             disabled={loading}
             title="like"
-            className="flex grow items-center justify-center gap-2 rounded-xl px-4 py-2 transition hover:bg-secondary"
+            className="flex grow items-center justify-center gap-2 rounded-xl px-4 py-2 transition hover:bg-secondary cursor-pointer"
           >
             {liked ? <FaHeart color="red" /> : <FaRegHeart />}
 
@@ -212,12 +250,12 @@ export const PostCard = ({ post, onDelete }) => {
           </button>
           {showContact ? (
             <div className="flex flex-col items-center gap-2">
-              <span className="text-sm text-primary font-medium">
+              <span className="text-sm text-primary font-medium ">
                 📞 {post.postedBy.phone || "Not Available"}
               </span>
               <button
                 onClick={handleCopy}
-                className="text-xs text-white bg-primary px-3 py-1 rounded-full flex items-center gap-2"
+                className="text-xs text-white bg-primary px-3 py-1 rounded-full flex items-center gap-2 cursor-pointer"
               >
                 {copied ? <FaCheck /> : <FaCopy />}
                 {copied ? "Copied!" : "Copy"}

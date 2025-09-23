@@ -30,8 +30,8 @@ api.interceptors.response.use(
       message === "Token Invalid"
     ) {
       toast.error("Session expired. Please log in again.");
-      //localStorage.removeItem("token");
-      //window.location.href = "/login";
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
 
     return Promise.reject(err);

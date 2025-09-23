@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
-import { getUserProfile, updateUserProfile } from "../../api/userApi";
-import ProfileForm from "@/components/profile/ProfileForm";
-import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
-import { useAuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { getUserProfile, updateUserProfile } from "@/api/userApi";
 import toast from "react-hot-toast";
-
-const Profile = () => {
+import { useAuthContext } from "@/context/AuthContext";
+const useProfile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { authUser } = useAuthContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!authUser) {
-      navigate("/login");
+      setLoading(false);
       return;
     }
-
     const fetchProfile = async () => {
       try {
         const data = await getUserProfile();
         setUser(data.user);
+        console.log(data.user);
       } catch (err) {
+        toast.error(err.message);
         console.error(err);
       } finally {
         setLoading(false);
@@ -30,7 +26,7 @@ const Profile = () => {
     };
 
     fetchProfile();
-  }, [authUser, navigate]);
+  }, [authUser]);
 
   const handleUpdate = async (updatedData) => {
     const isValid = handleInputErrors(updatedData);
@@ -40,7 +36,7 @@ const Profile = () => {
       setUser(updatedUser.user);
       toast.success("Profile updated sucessfully!");
     } catch (err) {
-      toast.error("Failed to update profile");
+      toast.error(err.message || "Failed to update profile");
       console.error(err);
     }
   };
@@ -67,14 +63,7 @@ const Profile = () => {
     return true;
   }
 
-  if (loading) return <ProfileSkeleton />;
-
-  return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">
-      <h2 className="text-2xl font-bold mb-4">My Profile</h2>
-      {user && <ProfileForm user={user} onSubmit={handleUpdate} />}
-    </div>
-  );
+  return { user, loading, handleUpdate };
 };
 
-export default Profile;
+export default useProfile;

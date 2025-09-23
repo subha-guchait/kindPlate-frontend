@@ -11,9 +11,10 @@ export const AuthContextProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // helper: update token
+  const setToken = (token) => {
     if (token) {
+      localStorage.setItem("token", token);
       try {
         const decoded = jwtDecode(token);
         if (decoded.exp < Date.now() / 1000) {
@@ -22,18 +23,29 @@ export const AuthContextProvider = ({ children }) => {
         } else {
           setAuthUser({ token, ...decoded });
         }
-      } catch (err) {
+      } catch {
         localStorage.removeItem("token");
         setAuthUser(null);
-      } finally {
-        setLoading(false);
       }
+    } else {
+      localStorage.removeItem("token");
+      setAuthUser(null);
+    }
+  };
+
+  // on mount: read from localStorage once
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToken(token);
+    } else {
+      setAuthUser(null);
     }
     setLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authUser, setAuthUser, loading }}>
+    <AuthContext.Provider value={{ authUser, setAuthUser, setToken, loading }}>
       {children}
     </AuthContext.Provider>
   );

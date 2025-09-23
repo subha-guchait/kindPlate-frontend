@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getPosts } from "@/api/postApi";
+import toast from "react-hot-toast";
 
 export const usePosts = ({
   currentPage,
@@ -9,33 +10,59 @@ export const usePosts = ({
 }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({});
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [pagination, setPagination] = useState({
+    hasNextPage: false,
+    nextPage: null,
+    lastPage: 1,
+  });
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (pageNum, reset = false) => {
     try {
-      const data = await getPosts(currentPage, limit, {
+      const data = await getPosts(pageNum, limit, {
         state: selectedState,
         city: selectedCity,
       });
 
-      setPosts(data.posts);
+      setPosts((prev) =>
+        reset || pageNum === 1 ? data.posts : [...prev, ...data.posts]
+      );
+
       setPagination({
-        hasPreviousPage: data.hasPreviousPage,
         hasNextPage: data.hasNextpage,
-        previousPage: data.previousPage,
         nextPage: data.nextPage,
         lastPage: data.lastPage,
       });
     } catch (err) {
       console.error(err);
+      toast.error(err.message);
     } finally {
       setLoading(false);
+      setIsFetchingMore(false);
     }
   };
 
+  // Run on first load + whenever filters/limit change
   useEffect(() => {
-    fetchPosts();
-  }, [limit, currentPage, selectedState, selectedCity]);
+    setPosts([]);
+    setLoading(true);
+    fetchPosts(1, true); // reset load
+  }, [limit, selectedState, selectedCity]);
 
-  return { posts, setPosts, loading, refresh: fetchPosts, ...pagination };
+  // Run when currentPage changes (for infinite scroll)
+  useEffect(() => {
+    if (currentPage > 1) {
+      setIsFetchingMore(true);
+      fetchPosts(currentPage);
+    }
+  }, [currentPage]);
+
+  return {
+    posts,
+    setPosts,
+    loading,
+    isFetchingMore,
+    setIsFetchingMore,
+    ...pagination,
+  };
 };

@@ -5,6 +5,7 @@ import { useUserPosts } from "@/hooks/useUserPosts";
 import addPostIcon from "../../assets/addPost.png";
 import indiaData from "@/data/indiaStatesAndCities";
 import PostSkeleton from "@/components/skeleton/PostSkeleton";
+import { motion } from "framer-motion";
 
 const UserPostsPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,11 +34,34 @@ const UserPostsPage = () => {
         onPostCreated={refresh}
         indiaData={indiaData}
       />
-      <div className="flex min-h-svh flex-col items-center justify-center">
+      <div className="flex min-h-svh flex-col items-center ">
         {loading ? (
           Array.from({ length: 3 }).map((_, index) => (
             <PostSkeleton key={index} />
           ))
+        ) : posts.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col items-center text-gray-500"
+          >
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+              className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4 shadow-md"
+            >
+              <img
+                src={addPostIcon}
+                alt="Add Post"
+                className="w-8 h-8 invert opacity-70"
+              />
+            </motion.div>
+            <p className="text-lg font-medium">No posts yet</p>
+            <p className="text-sm">
+              Click the + button to create your first post
+            </p>
+          </motion.div>
         ) : (
           <div>
             {posts.map((post) => (

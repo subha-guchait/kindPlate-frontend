@@ -2,6 +2,10 @@ import axios from "axios";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 
+import api from "./axios";
+
+const PRE_API_URL = `/auth`;
+
 export const logIn = async (email, password) => {
   try {
     const res = await axios.post(`${API_URL}/login`, { email, password });
@@ -59,6 +63,19 @@ export const updatePassword = async (token, password) => {
     const res = await axios.patch(`${API_URL}/update-password/${token}`, {
       newPassword: password,
     });
+    return res.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
+export const changePassword = async ({ oldPassword, newPassword }) => {
+  try {
+    const res = await api.patch(`${PRE_API_URL}/change-password`, {
+      oldPassword,
+      newPassword,
+    });
+
     return res.data;
   } catch (err) {
     throw new Error(err.response.data.message);

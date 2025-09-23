@@ -25,5 +25,5 @@ export function useNetworkStatus() {
     };
   }, []);
 
-  return { isOnline, firstRender };
+  return { isOnline, firstRender: firstRender.current };
 }
