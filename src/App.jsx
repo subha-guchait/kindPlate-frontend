@@ -35,6 +35,7 @@ import Signup from "./pages/signup/Signup";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuthContext } from "./context/AuthContext";
 import useFullScreenAd from "./hooks/useFullScreenAds";
+import { HelpDrawer } from "./components/HelpDrawer";
 
 const App = () => {
   const { authUser, loading } = useAuthContext();
@@ -200,6 +201,7 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
+      <HelpDrawer />
       <Footer />
       <FullScreenAd ad={ad} visible={visible} closeAd={closeAd} />
     </div>

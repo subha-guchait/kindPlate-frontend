@@ -3,9 +3,6 @@ import { useAuthContext } from "../../context/AuthContext";
 import LogoutButton from "../logoutButton/LogoutButton";
 import {
   House,
-  UserRoundPen,
-  Menu,
-  UserRoundCog,
   SquarePen,
   User,
   Megaphone,
@@ -16,13 +13,14 @@ import {
   ShieldUser,
 } from "lucide-react";
 import { MdOutlineLeaderboard } from "react-icons/md";
-import allPostsIcon from "../../assets/allPostIcon.png";
 import useProfile from "@/hooks/useProfile";
 import { motion } from "framer-motion";
+import { useHelpDrawerStore } from "@/stores/helpDrawerStore";
 
 const Navbar = () => {
   const { authUser } = useAuthContext();
   const { user, loading } = useProfile();
+  const { openDrawer } = useHelpDrawerStore();
 
   return (
     <div className="navbar bg-base-100 shadow-md fixed top-0 left-0 w-full z-50">
@@ -184,10 +182,13 @@ const Navbar = () => {
                   </motion.li>
 
                   <motion.li whileHover={{ scale: 1.1 }}>
-                    <Link to="/help" className="flex items-center gap-2">
+                    <button
+                      onClick={openDrawer}
+                      className="flex items-center gap-2 w-full text-left px-2 py-2 cursor-pointer"
+                    >
                       <HeartHandshake className="w-5 h-5" />
                       <span>Help</span>
-                    </Link>
+                    </button>
                   </motion.li>
 
                   {/* Logout */}
